@@ -71,11 +71,10 @@ module DO
       options = args.last.is_a?(Hash) ? args.pop : {}
       cmd = args.join(" ")
       if options[:as]
-        if options[:as] == 'root'
-          cmd = "sudo #{cmd}"
-        else
-          cmd = "su #{options[:as]} -c '#{cmd.gsub("'", "'\\\\''")}'"
-        end
+        cmd = "su #{options[:as]} -c '#{cmd.gsub("'", "'\\\\''")}'"
+      end
+      if options[:sudo] == true
+        cmd = "sudo #{cmd}"
       end
       log cmd
       result = ""
