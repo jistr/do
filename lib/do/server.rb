@@ -66,15 +66,17 @@ module DO
     #   run 'ls -al'
     #   run 'ls', '-al'
     #   run 'mysqladmin -u root -p password 'new', :input => 'oldpassword'
+    #   run 'echo $HOME', :as => 'user'  # su user -c 'echo $HOME'
+    #   run 'echo $HOME', :as => 'user', :sudo_su => true  # sudo su user -c 'echo $HOME'
     #
     def run(*args)
       options = args.last.is_a?(Hash) ? args.pop : {}
       cmd = args.join(" ")
       if options[:as]
         cmd = "su #{options[:as]} -c '#{cmd.gsub("'", "'\\\\''")}'"
-      end
-      if options[:sudo] == true
-        cmd = "sudo #{cmd}"
+        if options[:sudo_su] == true
+          cmd = "sudo #{cmd}"
+        end
       end
       log cmd
       result = ""
